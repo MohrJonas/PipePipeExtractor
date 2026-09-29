@@ -5,4 +5,5 @@ import javax.annotation.Nonnull;
 public record TwitchVideoPlayerMediaSessionManagerResponseInner(@Nonnull String clipTitle,
                                                                 @Nonnull String ownerDisplayName,
                                                                 @Nonnull String ownerLoginName,
-                                                                @Nonnull String ownerProfileImageUrl) { }
+                                                                @Nonnull String ownerProfileImageUrl) {
+}

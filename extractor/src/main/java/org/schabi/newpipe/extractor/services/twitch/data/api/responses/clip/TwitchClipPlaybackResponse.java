@@ -25,7 +25,7 @@ public final class TwitchClipPlaybackResponse extends TwitchBaseResponse<TwitchC
         final var value = accessToken.getString("value");
         final var aspectRatio = clip.getArray("assets").getObject(0).getFloat("aspectRatio");
         return clip.getArray("videoQualities").stream().map(ob -> {
-            final var obj = (JsonObject)ob;
+            final var obj = (JsonObject) ob;
             final var clipHeight = Integer.parseInt(obj.getString("quality"));
             final var clipWidth = Math.round(clipHeight * aspectRatio);
             return new TwitchClipPlaybackResponseInner(

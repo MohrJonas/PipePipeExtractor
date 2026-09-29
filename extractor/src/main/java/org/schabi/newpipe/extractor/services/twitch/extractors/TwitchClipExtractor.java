@@ -16,7 +16,6 @@ import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.Twit
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.DeliveryMethod;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
-import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.stream.VideoStream;
 
@@ -24,7 +23,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -35,7 +33,8 @@ public final class TwitchClipExtractor extends StreamExtractor {
 
     public TwitchClipExtractor(final StreamingService service,
                                final LinkHandler linkHandler) {
-        super(service, linkHandler);}
+        super(service, linkHandler);
+    }
 
     @NotNull
     @Override

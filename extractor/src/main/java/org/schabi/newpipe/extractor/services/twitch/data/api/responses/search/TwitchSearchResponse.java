@@ -14,7 +14,6 @@ import org.schabi.newpipe.extractor.services.twitch.data.api.responses.search.ty
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,7 +52,7 @@ public final class TwitchSearchResponse extends TwitchBaseResponse<List<TwitchSe
                 item.getString("previewThumbnailURL"),
                 item.getString("createdAt"),
                 item.getString("id")
-            );
+        );
     }
 
     private static @Nonnull TwitchSearchGameResponseEntry parseAsGameEntry(JsonObject node) {
@@ -69,7 +68,7 @@ public final class TwitchSearchResponse extends TwitchBaseResponse<List<TwitchSe
         final Optional<JsonArray> vods = searchFor.has("videos") ? Optional.of(searchFor.getObject("videos").getArray("edges")) : Optional.empty();
         final var masterList = new LinkedList<TwitchSearchBaseResponseEntry>();
         channels.ifPresent(objects -> masterList.addAll(objects.stream().map(ob -> {
-            final var obj = (JsonObject)ob;
+            final var obj = (JsonObject) ob;
             final var isLive = obj.getObject("item").getObject("stream").has("viewersCount");
             return isLive ? parseAsStreamEntry(obj) : parseAsChannelEntry(obj);
         }).toList()));

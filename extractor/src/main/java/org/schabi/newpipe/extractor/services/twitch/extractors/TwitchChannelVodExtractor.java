@@ -2,7 +2,6 @@ package org.schabi.newpipe.extractor.services.twitch.extractors;
 
 import com.grack.nanojson.JsonParserException;
 
-import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;

@@ -3,16 +3,11 @@ package org.schabi.newpipe.extractor.services.twitch;
 import static org.schabi.newpipe.extractor.StreamingService.ServiceInfo.MediaCapability.LIVE;
 import static org.schabi.newpipe.extractor.StreamingService.ServiceInfo.MediaCapability.VIDEO;
 
-import org.jetbrains.annotations.NotNull;
-import org.schabi.newpipe.extractor.InfoItem;
-import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.channel.ChannelExtractor;
 import org.schabi.newpipe.extractor.channel.ChannelTabExtractor;
 import org.schabi.newpipe.extractor.comments.CommentsExtractor;
-import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
-import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.kiosk.KioskList;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandlerFactory;
@@ -22,8 +17,6 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.playlist.PlaylistExtractor;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
-import org.schabi.newpipe.extractor.search.filter.FilterItem;
-import org.schabi.newpipe.extractor.services.twitch.data.TwitchChannelTabLinkType;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchChannelClipExtractor;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchChannelExtractor;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchChannelStreamExtractor;
@@ -39,11 +32,9 @@ import org.schabi.newpipe.extractor.services.twitch.linkHandlers.TwitchLiveKiosk
 import org.schabi.newpipe.extractor.services.twitch.linkHandlers.TwitchSearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.services.twitch.linkHandlers.TwitchStreamLinkHandlerFactory;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
-import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.subscription.SubscriptionExtractor;
 import org.schabi.newpipe.extractor.suggestion.SuggestionExtractor;
 
-import java.io.IOException;
 import java.util.List;
 
 public final class TwitchService extends StreamingService {

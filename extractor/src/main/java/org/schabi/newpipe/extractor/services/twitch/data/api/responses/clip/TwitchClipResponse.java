@@ -18,7 +18,7 @@ public final class TwitchClipResponse extends TwitchBaseResponse<TwitchClipRespo
     protected TwitchClipResponseInner[] ParseData(JsonObject data) {
         final var clipObjects = data.getObject("user").getObject("clips").getArray("edges");
         return clipObjects.stream().map(ob -> {
-            final var obj = (JsonObject)ob;
+            final var obj = (JsonObject) ob;
             final var node = obj.getObject("node");
             return new TwitchClipResponseInner(
                     node.getString("thumbnailURL"),

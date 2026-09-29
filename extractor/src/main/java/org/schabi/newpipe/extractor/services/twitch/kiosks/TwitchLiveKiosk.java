@@ -2,7 +2,6 @@ package org.schabi.newpipe.extractor.services.twitch.kiosks;
 
 import com.grack.nanojson.JsonParserException;
 
-import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.downloader.Downloader;
@@ -18,8 +17,6 @@ import org.schabi.newpipe.extractor.stream.StreamType;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;

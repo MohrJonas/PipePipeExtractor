@@ -3,7 +3,6 @@ package org.schabi.newpipe.extractor.services.twitch.extractors;
 import com.grack.nanojson.JsonParserException;
 
 import org.jetbrains.annotations.NotNull;
-import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.InfoItemExtractor;
 import org.schabi.newpipe.extractor.InfoItemsCollector;
@@ -15,12 +14,10 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlParser;
-import org.schabi.newpipe.extractor.services.twitch.TwitchUtils;
 import org.schabi.newpipe.extractor.services.twitch.api.ThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchApi;
 import org.schabi.newpipe.extractor.services.twitch.data.Resolution;
 import org.schabi.newpipe.extractor.services.twitch.data.TwitchVideoStream;
-import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchSideNavResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchSideNavResponseInner;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.channel.TwitchChannelResponseInner;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.stream.TwitchStreamResponseInner;
@@ -54,12 +51,6 @@ public class TwitchStreamExtractor extends StreamExtractor {
         super(service, linkHandler);
     }
 
-    @NotNull
-    @Override
-    public String getThumbnailUrl() throws ParsingException {
-        return ThumbnailURLGenerator.getThumbnailURLForStream(streamResponse.streamerName());
-    }
-
     private static int getResolutionPixelCount(Resolution resolution) {
         return resolution.width() * resolution.height();
     }
@@ -73,8 +64,14 @@ public class TwitchStreamExtractor extends StreamExtractor {
 
     @NotNull
     @Override
+    public String getThumbnailUrl() throws ParsingException {
+        return ThumbnailURLGenerator.getThumbnailURLForStream(streamResponse.streamerName());
+    }
+
+    @NotNull
+    @Override
     public String getUploaderAvatarUrl() throws ParsingException {
-        return  channelResponse.streamerAvatarUrl();
+        return channelResponse.streamerAvatarUrl();
     }
 
     @Nonnull
@@ -103,8 +100,7 @@ public class TwitchStreamExtractor extends StreamExtractor {
     @Nullable
     @Override
     public InfoItemsCollector<? extends InfoItem, ? extends InfoItemExtractor> getRelatedItems() throws IOException, ExtractionException {
-        return new StreamInfoItemsCollector(getServiceId())
-        {
+        return new StreamInfoItemsCollector(getServiceId()) {
             @Override
             public List<StreamInfoItem> getItems() {
                 return Arrays.stream(sideNavResponses).map(res -> {
@@ -113,7 +109,7 @@ public class TwitchStreamExtractor extends StreamExtractor {
                             TwitchUrlBuilder.buildStreamUrlFromChannelName(res.streamerLoginName()),
                             res.title(),
                             StreamType.VIDEO_STREAM
-                        );
+                    );
                     item.setUploaderName(res.streamerName());
                     item.setThumbnailUrl(ThumbnailURLGenerator.getThumbnailURLForStream(res.streamerLoginName()));
                     return item;

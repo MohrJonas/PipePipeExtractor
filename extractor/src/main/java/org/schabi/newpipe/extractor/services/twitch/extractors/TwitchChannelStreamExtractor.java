@@ -9,7 +9,6 @@ import org.schabi.newpipe.extractor.channel.ChannelTabExtractor;
 import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
-import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.api.ThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchApi;
@@ -18,7 +17,6 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamType;
 
 import java.io.IOException;
-import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +33,7 @@ public final class TwitchChannelStreamExtractor extends ChannelTabExtractor {
     @Nonnull
     @Override
     public InfoItemsPage<InfoItem> getInitialPage() throws IOException, ExtractionException {
-        if(response.streamTitle() == null)
+        if (response.streamTitle() == null)
             return new InfoItemsPage<>(Collections.emptyList(), null, Collections.emptyList());
         var item = new StreamInfoItem(
                 getServiceId(),

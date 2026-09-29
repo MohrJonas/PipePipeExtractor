@@ -18,10 +18,10 @@ public final class TwitchVideoPlayerMediaSessionManagerResponse extends TwitchBa
         final var video = data.getObject("video");
         final var owner = video.getObject("owner");
         return new TwitchVideoPlayerMediaSessionManagerResponseInner(
-            video.getString("title"),
-            owner.getString("displayName"),
-            owner.getString("login"),
-            owner.getString("profileImageURL")
+                video.getString("title"),
+                owner.getString("displayName"),
+                owner.getString("login"),
+                owner.getString("profileImageURL")
         );
     }
 }

@@ -22,15 +22,15 @@ public class TwitchSideNavResponse extends TwitchBaseResponse<TwitchSideNavRespo
                 edges.getObject(0).getObject("node").getObject("content").getArray("edges").stream(),
                 edges.getObject(1).getObject("node").getObject("content").getArray("edges").stream()
         ).map(ob -> {
-            var obj = (JsonObject)ob;
+            var obj = (JsonObject) ob;
             var node = obj.getObject("node");
             var broadcaster = node.getObject("broadcaster");
             var broadcastSettings = broadcaster.getObject("broadcastSettings");
             return new TwitchSideNavResponseInner(
-                broadcaster.getString("displayName"),
-                broadcaster.getString("login"),
-                broadcastSettings.getString("title"),
-                node.getInt("viewersCount")
+                    broadcaster.getString("displayName"),
+                    broadcaster.getString("login"),
+                    broadcastSettings.getString("title"),
+                    node.getInt("viewersCount")
             );
         }).toArray(TwitchSideNavResponseInner[]::new);
     }

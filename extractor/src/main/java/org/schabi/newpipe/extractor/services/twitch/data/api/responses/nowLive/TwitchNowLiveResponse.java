@@ -23,7 +23,7 @@ public class TwitchNowLiveResponse extends TwitchBaseResponse<List<TwitchNowLive
     protected List<TwitchNowLiveResponseEntry> ParseData(JsonObject data) {
         final var nodes = data.getObject("streams").getArray("edges");
         return nodes.stream().map(ob -> {
-                    final var outerNode = (JsonObject)ob;
+                    final var outerNode = (JsonObject) ob;
                     final var node = outerNode.getObject("node");
                     final var broadcaster = node.getObject("broadcaster");
                     final var streamerName = broadcaster.getString("displayName");

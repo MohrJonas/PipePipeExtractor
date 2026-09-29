@@ -3,9 +3,7 @@ package org.schabi.newpipe.extractor.services.twitch.extractors;
 import com.grack.nanojson.JsonParserException;
 
 import org.jetbrains.annotations.Nullable;
-import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.InfoItem;
-import org.schabi.newpipe.extractor.MetaInfo;
 import org.schabi.newpipe.extractor.MultiInfoItemsCollector;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
@@ -28,15 +26,11 @@ import org.schabi.newpipe.extractor.services.twitch.data.api.responses.search.ty
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.search.types.TwitchSearchGameResponseEntry;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.search.types.TwitchSearchStreamResponseEntry;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.search.types.TwitchSearchVodResponseEntry;
-import org.schabi.newpipe.extractor.stream.Stream;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamInfoItemExtractor;
 import org.schabi.newpipe.extractor.stream.StreamType;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -145,9 +139,7 @@ public class TwitchSearchExtractor extends SearchExtractor {
                         return infoItem.getThumbnailUrl();
                     }
                 });
-            }
-
-            else if (item instanceof TwitchSearchStreamResponseEntry) {
+            } else if (item instanceof TwitchSearchStreamResponseEntry) {
                 var infoItem = buildStreamInfoItem(getServiceId(), (TwitchSearchStreamResponseEntry) item);
                 collector.commit(new StreamInfoItemExtractor() {
                     @Override
@@ -197,9 +189,7 @@ public class TwitchSearchExtractor extends SearchExtractor {
                         return infoItem.getThumbnailUrl();
                     }
                 });
-            }
-
-            else if (item instanceof TwitchSearchVodResponseEntry) {
+            } else if (item instanceof TwitchSearchVodResponseEntry) {
                 final var infoItem = buildVodInfoItem(getServiceId(), (TwitchSearchVodResponseEntry) item);
                 collector.commit(new StreamInfoItemExtractor() {
                     @Override
@@ -249,9 +239,7 @@ public class TwitchSearchExtractor extends SearchExtractor {
                         return infoItem.getThumbnailUrl();
                     }
                 });
-            }
-
-            else if (item instanceof TwitchSearchGameResponseEntry) {
+            } else if (item instanceof TwitchSearchGameResponseEntry) {
                 final var infoItem = buildCategoryInfoItem(getServiceId(), (TwitchSearchGameResponseEntry) item);
                 collector.commit(new PlaylistInfoItemExtractor() {
                     @Override
@@ -281,7 +269,7 @@ public class TwitchSearchExtractor extends SearchExtractor {
                 });
             }
         }
-         return new InfoItemsPage<>(collector, null);
+        return new InfoItemsPage<>(collector, null);
     }
 
     @Override

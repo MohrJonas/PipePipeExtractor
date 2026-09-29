@@ -17,7 +17,6 @@ import org.schabi.newpipe.extractor.services.twitch.data.api.responses.channel.T
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchClipPlaybackResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchClipResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchVideoPlayerMediaSessionManagerResponse;
-import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchVideoPlayerMediaSessionManagerResponseInner;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.nowLive.TwitchNowLiveResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.playbackToken.TwitchStreamPlaybackTokenResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.playbackToken.TwitchVodPlaybackTokenResponse;

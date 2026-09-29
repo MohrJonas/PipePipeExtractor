@@ -18,7 +18,7 @@ public final class TwitchVodResponse extends TwitchBaseResponse<TwitchVodRespons
     protected TwitchVodResponseInner[] ParseData(JsonObject data) {
         final var vodObjects = data.getObject("user").getObject("videos").getArray("edges");
         return vodObjects.stream().map(ob -> {
-            final var obj = (JsonObject)ob;
+            final var obj = (JsonObject) ob;
             final var node = obj.getObject("node");
             return new TwitchVodResponseInner(
                     node.getString("previewThumbnailURL"),

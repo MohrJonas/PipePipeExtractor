@@ -6,8 +6,6 @@ import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -90,7 +88,7 @@ public final class TwitchUrlParser {
             final var parts = path.split("/");
             Assertions.assertThat(() -> parts.length == 1 || parts.length == 2);
             // TODO Check query part for ?_type=stream
-            if(parts.length == 1)
+            if (parts.length == 1)
                 return new Pair<>(parts[0], TwitchChannelTabLinkType.LIVE);
             var type = switch (parts[1]) {
                 case "clips" -> TwitchChannelTabLinkType.CLIPS;

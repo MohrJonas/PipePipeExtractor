@@ -2,7 +2,6 @@ package org.schabi.newpipe.extractor.services.twitch.extractors;
 
 import com.grack.nanojson.JsonParserException;
 
-import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.Page;
 import org.schabi.newpipe.extractor.StreamingService;
@@ -41,18 +40,18 @@ public final class TwitchChannelClipExtractor extends ChannelTabExtractor {
     @Override
     public InfoItemsPage<InfoItem> getInitialPage() throws IOException, ExtractionException {
         return new InfoItemsPage<>(Arrays.stream(response).map(res -> {
-            final var item = new StreamInfoItem(getServiceId(), TwitchUrlBuilder.buildClipUrlFromClipId(res.getClipId()), res.getClipTitle(), StreamType.NONE);
-            item.setThumbnailUrl(res.getClipThumbnailUrl());
+            final var item = new StreamInfoItem(getServiceId(), TwitchUrlBuilder.buildClipUrlFromClipId(res.clipId()), res.clipTitle(), StreamType.NONE);
+            item.setThumbnailUrl(res.clipThumbnailUrl());
             try {
-                item.setUploaderName(getId() + " + " + res.getClipperName());
+                item.setUploaderName(getId() + " + " + res.clipperName());
             } catch (ParsingException e) {
                 item.setUploaderName("");
             }
-            item.setDuration(res.getClipLength());
-            item.setViewCount(res.getClipViewerCount());
+            item.setDuration(res.clipLength());
+            item.setViewCount(res.clipViewerCount());
             item.setShortFormContent(true);
-            item.setShortDescription("(" + res.getClipperName() + "), " + res.getGameName());
-            item.setUploadDate(new DateWrapper(OffsetDateTime.parse(res.getUploadDateTimeString())));
+            item.setShortDescription("(" + res.clipperName() + "), " + res.gameName());
+            item.setUploadDate(new DateWrapper(OffsetDateTime.parse(res.uploadDateTimeString())));
             return item;
         }).collect(Collectors.toList()), null, Collections.emptyList());
     }
