@@ -223,7 +223,7 @@ public final class TwitchApiClient {
     public @Nonnull TwitchClipResponse getTwitchClips(final @Nonnull Downloader downloader, final @Nonnull String channelName) throws IOException, ReCaptchaException, JsonParserException {
         return performRequest(downloader, false, HttpRequestType.POST,
                 _ -> TwitchApiConstants.TWITCH_GQL_URL,
-                _ -> TwitchGQLTemplates.getChannel(channelName),
+                _ -> TwitchGQLTemplates.getClips(channelName),
                 response -> TwitchResponseParser.parseFromJson(TwitchJsonHelper.parseJsonArrayFromString(response.responseBody()).getObject(0), TwitchClipResponse.class)
         );
     }
@@ -283,6 +283,14 @@ public final class TwitchApiClient {
         return performRequest(downloader, false, HttpRequestType.POST,
                 _ -> TwitchApiConstants.TWITCH_GQL_URL,
                 _ -> TwitchGQLTemplates.getVideoPlayerMediaSessionManagerTemplate(vodId),
+                response -> TwitchResponseParser.parseFromJson(TwitchJsonHelper.parseJsonObjectFromString(response.responseBody()), TwitchVideoPlayerMediaSessionManagerResponse.class)
+        );
+    }
+
+    public @Nonnull TwitchVideoPlayerMediaSessionManagerResponse getTwitchVideoPlayerMediaSessionClipManager(final @Nonnull Downloader downloader, final @Nonnull String clipSlug) throws IOException, ReCaptchaException, JsonParserException {
+        return performRequest(downloader, false, HttpRequestType.POST,
+                _ -> TwitchApiConstants.TWITCH_GQL_URL,
+                _ -> TwitchGQLTemplates.getVideoPlayerMediaSessionClipManagerTemplate(clipSlug),
                 response -> TwitchResponseParser.parseFromJson(TwitchJsonHelper.parseJsonObjectFromString(response.responseBody()), TwitchVideoPlayerMediaSessionManagerResponse.class)
         );
     }

@@ -10,9 +10,12 @@ import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
+import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.api.ThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchClipPlaybackResponseInner;
+import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchVideoPlayerMediaSessionManagerResponse;
+import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchVideoPlayerMediaSessionManagerResponseInner;
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.DeliveryMethod;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
@@ -32,6 +35,7 @@ public final class TwitchClipExtractor extends StreamExtractor {
     @Nonnull
     private final TwitchApiClient apiClient;
     private TwitchClipPlaybackResponseInner[] clipResponse;
+    private TwitchVideoPlayerMediaSessionManagerResponseInner response;
 
     public TwitchClipExtractor(final @Nonnull StreamingService service,
                                final @Nonnull LinkHandler linkHandler,
@@ -51,6 +55,7 @@ public final class TwitchClipExtractor extends StreamExtractor {
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
         try {
             clipResponse = apiClient.getClipPlaybackToken(downloader, getId()).getData();
+            response = apiClient.getTwitchVideoPlayerMediaSessionClipManager(downloader, getId()).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }
@@ -59,8 +64,7 @@ public final class TwitchClipExtractor extends StreamExtractor {
     @Nonnull
     @Override
     public String getName() throws ParsingException {
-        // FIXME
-        return "???";
+       return response.clipTitle();
     }
 
     @Nonnull
@@ -72,14 +76,19 @@ public final class TwitchClipExtractor extends StreamExtractor {
     @Nonnull
     @Override
     public String getUploaderUrl() throws ParsingException {
-        // FIXME
-        return "???";
+        return TwitchUrlBuilder.buildChannelUrlFromChannelName(response.ownerLoginName());
     }
 
     @Nonnull
     @Override
     public String getUploaderName() throws ParsingException {
-        return "???";
+        return response.ownerDisplayName();
+    }
+
+    @NotNull
+    @Override
+    public String getUploaderAvatarUrl() throws ParsingException {
+        return response.ownerProfileImageUrl();
     }
 
     @Override

@@ -15,10 +15,25 @@ public final class TwitchVideoPlayerMediaSessionManagerResponse extends TwitchBa
 
     @Override
     protected TwitchVideoPlayerMediaSessionManagerResponseInner ParseData(JsonObject data) {
-        final var video = data.getObject("video");
-        final var owner = video.getObject("owner");
+        if(data.has("video"))
+            return parseVodData(data.getObject("video"));
+        return parseClipData(data.getObject("clip"));
+    }
+
+    private TwitchVideoPlayerMediaSessionManagerResponseInner parseClipData(final @Nonnull JsonObject clipObject) {
+        final var broadcaster = clipObject.getObject("broadcaster");
         return new TwitchVideoPlayerMediaSessionManagerResponseInner(
-                video.getString("title"),
+                clipObject.getString("title"),
+                broadcaster.getString("displayName"),
+                broadcaster.getString("login"),
+                broadcaster.getString("profileImageURL")
+        );
+    }
+
+    private TwitchVideoPlayerMediaSessionManagerResponseInner parseVodData(final @Nonnull JsonObject videoObject) {
+        final var owner = videoObject.getObject("owner");
+        return new TwitchVideoPlayerMediaSessionManagerResponseInner(
+                videoObject.getString("title"),
                 owner.getString("displayName"),
                 owner.getString("login"),
                 owner.getString("profileImageURL")

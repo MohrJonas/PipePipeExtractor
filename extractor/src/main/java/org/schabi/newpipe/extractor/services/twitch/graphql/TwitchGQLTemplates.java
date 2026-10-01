@@ -210,6 +210,24 @@ public final class TwitchGQLTemplates {
                 }
             }""";
 
+    private static final String MEDIA_SESSION_CLIP_MANAGER_TEMPLATE = """
+            {
+                "operationName": "VideoPlayerMediaSessionManager",
+                "variables": {
+                    "clipSlug": "%s",
+                    "isClip": true,
+                    "isLive": false,
+                    "isVodOrCollection": false,
+                    "vodID": ""
+                },
+                "extensions": {
+                    "persistedQuery": {
+                        "version": 1,
+                        "sha256Hash": "694c36677896425624f1293c9cb5aa4d08ed813993cf84c80d13d9380721fda2"
+                    }
+                }
+            }""";
+
     private static final String SIDE_NAV_TEMPLATE = """
             {
                 "operationName": "SideNav",
@@ -254,6 +272,10 @@ public final class TwitchGQLTemplates {
 
     public static String getVideoPlayerMediaSessionManagerTemplate(final String vodId) {
         return String.format(MEDIA_SESSION_MANAGER_TEMPLATE, vodId);
+    }
+
+    public static String getVideoPlayerMediaSessionClipManagerTemplate(final String clipSlug) {
+        return String.format(MEDIA_SESSION_CLIP_MANAGER_TEMPLATE, clipSlug);
     }
 
     public static String getPlaybackAccessTokenTemplate(final String channelName) {
