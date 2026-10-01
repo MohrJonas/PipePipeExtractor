@@ -7,22 +7,22 @@ import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsDat
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TwitchNowLiveResponse extends TwitchBaseResponse<List<TwitchNowLiveResponseEntry>> {
+public class TwitchNowLiveResponse extends TwitchBaseResponse<TwitchNowLiveResponseInner> {
 
     public TwitchNowLiveResponse(@Nullable String[] errors, @Nonnull TwitchExtensionsData extensions, @Nonnull JsonObject data) {
         super(errors, extensions, data);
     }
 
     @Override
-    protected List<TwitchNowLiveResponseEntry> ParseData(JsonObject data) {
-        final var nodes = data.getObject("streams").getArray("edges");
-        return nodes.stream().map(ob -> {
+    protected TwitchNowLiveResponseInner ParseData(JsonObject data) {
+        final var streams = data.getObject("streams");
+        final var nodes = streams.getArray("edges");
+        final var entries = nodes.stream().map(ob -> {
                     final var outerNode = (JsonObject) ob;
                     final var node = outerNode.getObject("node");
                     final var broadcaster = node.getObject("broadcaster");
@@ -37,10 +37,16 @@ public class TwitchNowLiveResponse extends TwitchBaseResponse<List<TwitchNowLive
                             title,
                             viewers,
                             ThumbnailURLGenerator.getThumbnailURLForStream(loginName),
-                            gameName
+                            gameName,
+                            outerNode.getString("cursor")
                     );
                 })
                 .sorted(Comparator.comparing(TwitchNowLiveResponseEntry::streamViewers).reversed())
                 .collect(Collectors.toList());
+        return new TwitchNowLiveResponseInner(
+                streams.getObject("pageInfo").getBoolean("hasNextPage"),
+                entries.getLast().cursor(),
+                entries
+        );
     }
 }

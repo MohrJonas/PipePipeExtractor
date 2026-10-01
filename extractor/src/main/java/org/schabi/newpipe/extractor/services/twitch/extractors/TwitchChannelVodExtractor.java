@@ -14,7 +14,7 @@ import org.schabi.newpipe.extractor.localization.DateWrapper;
 import org.schabi.newpipe.extractor.services.twitch.Assertions;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlParser;
-import org.schabi.newpipe.extractor.services.twitch.api.TwitchApi;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.TwitchChannelTabLinkType;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.vod.TwitchVodResponseInner;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
@@ -29,11 +29,15 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 public final class TwitchChannelVodExtractor extends ChannelTabExtractor {
+    @Nonnull
+    private final TwitchApiClient apiClient;
     private TwitchVodResponseInner[] response;
 
-    public TwitchChannelVodExtractor(final StreamingService service,
-                                     final ListLinkHandler linkHandler) {
+    public TwitchChannelVodExtractor(final @Nonnull StreamingService service,
+                                     final @Nonnull ListLinkHandler linkHandler,
+                                     final @Nonnull TwitchApiClient apiClient) {
         super(service, linkHandler);
+        this.apiClient = apiClient;
     }
 
     @Nonnull
@@ -71,7 +75,7 @@ public final class TwitchChannelVodExtractor extends ChannelTabExtractor {
         try {
             final var pair = TwitchUrlParser.parseChannelTabFromChannelUrl(getUrl());
             Assertions.assertThat(() -> pair.getSecond() == TwitchChannelTabLinkType.VIDEOS);
-            response = TwitchApi.getTwitchVods(downloader, pair.getFirst()).getData();
+            response = apiClient.getTwitchVods(downloader, pair.getFirst()).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

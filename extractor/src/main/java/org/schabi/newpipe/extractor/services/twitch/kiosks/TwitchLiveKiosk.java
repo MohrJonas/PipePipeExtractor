@@ -10,7 +10,8 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.kiosk.KioskExtractor;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
-import org.schabi.newpipe.extractor.services.twitch.api.TwitchApi;
+import org.schabi.newpipe.extractor.services.twitch.TwitchUrlParser;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.nowLive.TwitchNowLiveResponse;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -24,18 +25,27 @@ import javax.annotation.Nonnull;
 public class TwitchLiveKiosk extends KioskExtractor<StreamInfoItem> {
 
     public static final String KIOSK_ID = "live";
-
+    private static final int EntriesPerPage = 25;
+    @Nonnull
+    private final TwitchApiClient apiClient;
     private TwitchNowLiveResponse response;
 
-    public TwitchLiveKiosk(final StreamingService streamingService,
-                           final ListLinkHandler linkHandler) {
+    public TwitchLiveKiosk(final @Nonnull StreamingService streamingService,
+                           final @Nonnull ListLinkHandler linkHandler,
+                           final @Nonnull TwitchApiClient apiClient) {
         super(streamingService, linkHandler, KIOSK_ID);
+        this.apiClient = apiClient;
     }
 
     @Override
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
+        populateData(downloader, getUrl());
+    }
+
+    private void populateData(@Nonnull final Downloader downloader, @Nonnull final String url) throws IOException, ExtractionException {
         try {
-            response = TwitchApi.getNowLiveInformation(downloader);
+            final var cursor = TwitchUrlParser.parseLiveKioskCursorFromKioskUrl(url);
+            response = apiClient.getNowLiveInformation(downloader, EntriesPerPage, cursor);
         } catch (JsonParserException e) {
             throw new IOException(e);
         }
@@ -50,23 +60,8 @@ public class TwitchLiveKiosk extends KioskExtractor<StreamInfoItem> {
     @Nonnull
     @Override
     public InfoItemsPage<StreamInfoItem> getInitialPage() throws IOException, ExtractionException {
-        response.getData()
-                .forEach(searchEntry -> {
-                    final var value = new StreamInfoItem(
-                            getServiceId(),
-                            TwitchUrlBuilder.buildStreamUrlFromChannelName(searchEntry.streamerName()),
-                            searchEntry.streamTitle(),
-                            StreamType.LIVE_STREAM
-                    );
-                    value.setViewCount(searchEntry.streamViewers());
-                    value.setUploaderName(searchEntry.streamerName());
-                    value.setUploaderUrl(TwitchUrlBuilder.buildStreamUrlFromChannelName(searchEntry.streamerName()));
-                    value.setShortDescription(searchEntry.gameName());
-                    value.setUploaderAvatarUrl(searchEntry.thumbnailUrl());
-                    value.setThumbnailUrl(searchEntry.thumbnailUrl());
-                });
         return new InfoItemsPage<>(
-                response.getData()
+                response.getData().liveEntries()
                         .stream()
                         .map(liveEntry -> {
                             final var infoItem = new StreamInfoItem(
@@ -85,11 +80,17 @@ public class TwitchLiveKiosk extends KioskExtractor<StreamInfoItem> {
                         })
                         .collect(Collectors.toList()),
                 null,
+//                This kiosk is theoretically set up for pagination but since I see no easy way to get around
+//                Twitch's /integrity endpoint we have to see if this will work any day
+//                response.getData().hasMoreEntries()
+//                ? new Page(TwitchUrlBuilder.buildLiveKioskUrlFromCursor(response.getData().cursor()))
+//                : null,
                 Collections.emptyList());
     }
 
     @Override
     public InfoItemsPage<StreamInfoItem> getPage(Page page) throws IOException, ExtractionException {
+        populateData(getDownloader(), page.getUrl());
         return getInitialPage();
     }
 }

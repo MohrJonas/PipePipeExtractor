@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class TwitchUrlBuilder {
     public static @Nonnull String buildSearchUrlFromSearchQuery(@Nonnull final String query) {
@@ -68,5 +69,11 @@ public final class TwitchUrlBuilder {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static @Nonnull String buildLiveKioskUrlFromCursor(final @Nullable String cursor) {
+        return cursor == null
+                ? "live?"
+                : "live?" + cursor;
     }
 }

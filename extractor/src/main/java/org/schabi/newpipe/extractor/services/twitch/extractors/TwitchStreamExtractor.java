@@ -15,7 +15,7 @@ import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlParser;
 import org.schabi.newpipe.extractor.services.twitch.api.ThumbnailURLGenerator;
-import org.schabi.newpipe.extractor.services.twitch.api.TwitchApi;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.Resolution;
 import org.schabi.newpipe.extractor.services.twitch.data.TwitchVideoStream;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchSideNavResponseInner;
@@ -41,14 +41,18 @@ import javax.annotation.Nullable;
 
 public class TwitchStreamExtractor extends StreamExtractor {
 
+    @Nonnull
+    private final TwitchApiClient apiClient;
     private TwitchStreamResponseInner streamResponse;
     private TwitchVideoStream[] streams;
     private TwitchChannelResponseInner channelResponse;
     private TwitchSideNavResponseInner[] sideNavResponses;
 
-    public TwitchStreamExtractor(final StreamingService service,
-                                 final LinkHandler linkHandler) {
+    public TwitchStreamExtractor(final @Nonnull StreamingService service,
+                                 final @Nonnull LinkHandler linkHandler,
+                                 final @Nonnull TwitchApiClient apiClient) {
         super(service, linkHandler);
+        this.apiClient = apiClient;
     }
 
     private static int getResolutionPixelCount(Resolution resolution) {
@@ -147,12 +151,12 @@ public class TwitchStreamExtractor extends StreamExtractor {
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
         try {
             final var streamId = TwitchUrlParser.parseChannelNameFromStreamUrl(getUrl());
-            final var streamInfo = TwitchApi.getStreamInformation(downloader, streamId);
+            final var streamInfo = apiClient.getStreamInformation(downloader, streamId);
             streamResponse = streamInfo.getData();
-            channelResponse = TwitchApi.getTwitchChannel(downloader, streamResponse.streamerLoginName()).getData();
-            sideNavResponses = TwitchApi.getTwitchSideNavResponse(downloader, streamResponse.streamerLoginName()).getData();
-            final var playbackToken = TwitchApi.getPlaybackToken(downloader, streamId);
-            streams = TwitchApi.getM3U8PlaybackUrl(downloader, streamId, playbackToken.getData().signature(), playbackToken.getData().value());
+            channelResponse = apiClient.getTwitchChannel(downloader, streamResponse.streamerLoginName()).getData();
+            sideNavResponses = apiClient.getTwitchSideNavResponse(downloader, streamResponse.streamerLoginName()).getData();
+            final var playbackToken = apiClient.getPlaybackToken(downloader, streamId);
+            streams = apiClient.getM3U8PlaybackUrl(downloader, streamId, playbackToken.getData().signature(), playbackToken.getData().value());
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

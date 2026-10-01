@@ -12,7 +12,7 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.api.ThumbnailURLGenerator;
-import org.schabi.newpipe.extractor.services.twitch.api.TwitchApi;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.TwitchVideoStream;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchVideoPlayerMediaSessionManagerResponseInner;
 import org.schabi.newpipe.extractor.stream.AudioStream;
@@ -25,19 +25,22 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 public class TwitchVodExtractor extends StreamExtractor {
 
+    @Nonnull
+    private final TwitchApiClient apiClient;
     private TwitchVideoStream[] streams;
     private TwitchVideoPlayerMediaSessionManagerResponseInner twitchVideoPlayerMediaSessionManager;
 
-    public TwitchVodExtractor(final StreamingService service,
-                              final LinkHandler linkHandler) {
+    public TwitchVodExtractor(final @Nonnull StreamingService service,
+                              final @Nonnull LinkHandler linkHandler,
+                              final @Nonnull TwitchApiClient apiClient) {
         super(service, linkHandler);
+        this.apiClient = apiClient;
     }
 
     @NotNull
@@ -49,10 +52,9 @@ public class TwitchVodExtractor extends StreamExtractor {
     @Override
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
         try {
-            final var token = TwitchApi.getVodPlaybackToken(downloader, getId());
-            final var playSessionId = UUID.randomUUID().toString().replace("-", "").substring(0, 32);
-            streams = TwitchApi.getM3U8VodPlaybackUrl(downloader, getId(), token.getData().signature(), token.getData().value(), playSessionId);
-            twitchVideoPlayerMediaSessionManager = TwitchApi.getTwitchVideoPlayerMediaSessionManager(downloader, getId()).getData();
+            final var token = apiClient.getVodPlaybackToken(downloader, getId());
+            streams = apiClient.getM3U8VodPlaybackUrl(downloader, getId(), token.getData().signature(), token.getData().value());
+            twitchVideoPlayerMediaSessionManager = apiClient.getTwitchVideoPlayerMediaSessionManager(downloader, getId()).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

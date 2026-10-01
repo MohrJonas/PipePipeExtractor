@@ -20,7 +20,7 @@ import org.schabi.newpipe.extractor.playlist.PlaylistInfoItemExtractor;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlParser;
-import org.schabi.newpipe.extractor.services.twitch.api.TwitchApi;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.search.TwitchSearchResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.search.types.TwitchSearchChannelResponseEntry;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.search.types.TwitchSearchGameResponseEntry;
@@ -36,11 +36,15 @@ import javax.annotation.Nonnull;
 
 public class TwitchSearchExtractor extends SearchExtractor {
 
+    @Nonnull
+    private final TwitchApiClient apiClient;
     private TwitchSearchResponse response;
 
-    public TwitchSearchExtractor(final StreamingService service,
-                                 final SearchQueryHandler linkHandler) {
+    public TwitchSearchExtractor(final @Nonnull StreamingService service,
+                                 final @Nonnull SearchQueryHandler linkHandler,
+                                 final @Nonnull TwitchApiClient apiClient) {
         super(service, linkHandler);
+        this.apiClient = apiClient;
     }
 
     private static StreamInfoItem buildStreamInfoItem(final int serviceId, final TwitchSearchStreamResponseEntry entry) {
@@ -281,7 +285,7 @@ public class TwitchSearchExtractor extends SearchExtractor {
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
         try {
             final var query = TwitchUrlParser.parseQueryFromSearchUrl(getUrl());
-            response = TwitchApi.getSearchResponse(downloader, query);
+            response = apiClient.getSearchResponse(downloader, query);
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

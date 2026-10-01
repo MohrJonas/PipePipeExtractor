@@ -5,5 +5,6 @@ public record TwitchNowLiveResponseEntry(String streamerName,
                                          String streamTitle,
                                          int streamViewers,
                                          String thumbnailUrl,
-                                         String gameName) {
+                                         String gameName,
+                                         String cursor) {
 }

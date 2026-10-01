@@ -1,5 +1,7 @@
 package org.schabi.newpipe.extractor.services.twitch.graphql;
 
+import javax.annotation.Nullable;
+
 public final class TwitchGQLTemplates {
     private static final String STREAM_PLAYBACK_ACCESS_TOKEN_TEMPLATE = "{\"query\": \"{\\n" +
             "            streamPlaybackAccessToken(\\n" +
@@ -48,8 +50,9 @@ public final class TwitchGQLTemplates {
             ]""";
 
     private static final String NOW_LIVE_TEMPLATE = "{\"query\":\"{\\n" +
-            "    streams(first: 25) {\\n" +
+            "    streams(first: %d%s) {\\n" +
             "        edges {\\n" +
+            "        cursor\\n" +
             "        node {\\n" +
             "            id\\n" +
             "            title\\n" +
@@ -62,6 +65,9 @@ public final class TwitchGQLTemplates {
             "                name\\n" +
             "            }\\n" +
             "        }\\n" +
+            "        }\\n" +
+            "        pageInfo {\\n" +
+            "            hasNextPage\\n" +
             "        }\\n" +
             "    }\\n" +
             "}\"}";
@@ -262,8 +268,12 @@ public final class TwitchGQLTemplates {
         return String.format(SEARCH_TEMPLATE, requestId, query);
     }
 
-    public static String getNowLive() {
-        return NOW_LIVE_TEMPLATE;
+    public static String getNowLive(final int count, @Nullable final String cursor) {
+        return String.format(NOW_LIVE_TEMPLATE, count,
+                cursor != null
+                        ? ", after: " + "\\\"" + cursor + "\\\""
+                        : ""
+        );
     }
 
     public static String getChannel(final String channelName) {

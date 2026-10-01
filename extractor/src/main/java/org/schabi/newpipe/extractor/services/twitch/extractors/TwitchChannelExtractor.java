@@ -17,7 +17,7 @@ import org.schabi.newpipe.extractor.search.filter.Filter;
 import org.schabi.newpipe.extractor.search.filter.FilterItem;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlParser;
-import org.schabi.newpipe.extractor.services.twitch.api.TwitchApi;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.TwitchChannelTabLinkType;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.channel.TwitchChannelResponseInner;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.vod.TwitchVodResponseInner;
@@ -36,12 +36,16 @@ import javax.annotation.Nonnull;
 
 public class TwitchChannelExtractor extends ChannelExtractor {
 
+    @Nonnull
+    private final TwitchApiClient apiClient;
     private TwitchChannelResponseInner channelResponse;
     private TwitchVodResponseInner[] response;
 
-    public TwitchChannelExtractor(final StreamingService service,
-                                  final ListLinkHandler linkHandler) {
+    public TwitchChannelExtractor(final @Nonnull StreamingService service,
+                                  final @Nonnull ListLinkHandler linkHandler,
+                                  final @Nonnull TwitchApiClient apiClient) {
         super(service, linkHandler);
+        this.apiClient = apiClient;
     }
 
 
@@ -174,8 +178,8 @@ public class TwitchChannelExtractor extends ChannelExtractor {
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
         try {
             final var channelName = TwitchUrlParser.parseChannelNameFromChannelUrl(getUrl());
-            channelResponse = TwitchApi.getTwitchChannel(downloader, channelName).getData();
-            response = TwitchApi.getTwitchVods(downloader, channelName).getData();
+            channelResponse = apiClient.getTwitchChannel(downloader, channelName).getData();
+            response = apiClient.getTwitchVods(downloader, channelName).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

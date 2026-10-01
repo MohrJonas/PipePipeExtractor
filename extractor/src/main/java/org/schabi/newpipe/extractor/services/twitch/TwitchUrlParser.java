@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class TwitchUrlParser {
 
@@ -99,5 +100,13 @@ public final class TwitchUrlParser {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static @Nullable String parseLiveKioskCursorFromKioskUrl(@Nonnull final String urlString) {
+        Assertions.assertThat(() -> urlString.contains("?"));
+        final var parts = urlString.split("\\?");
+        Assertions.assertThat(() -> parts.length == 1 || parts.length == 2);
+        Assertions.assertThat(() -> parts[0].equals("live"));
+        return parts.length == 1 ? null : parts[1];
     }
 }
