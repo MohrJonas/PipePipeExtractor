@@ -11,7 +11,7 @@ import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
-import org.schabi.newpipe.extractor.services.twitch.api.ThumbnailURLGenerator;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.TwitchVideoStream;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchVideoPlayerMediaSessionManagerResponseInner;
@@ -46,7 +46,7 @@ public class TwitchVodExtractor extends StreamExtractor {
     @NotNull
     @Override
     public String getThumbnailUrl() throws ParsingException {
-        return ThumbnailURLGenerator.NO_THUMBNAIL_URL;
+        return TwitchThumbnailURLGenerator.NO_THUMBNAIL_URL;
     }
 
     @Override

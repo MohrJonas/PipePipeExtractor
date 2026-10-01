@@ -3,7 +3,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses.search;
 import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonObject;
 
-import org.schabi.newpipe.extractor.services.twitch.api.ThumbnailURLGenerator;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.search.types.TwitchSearchChannelResponseEntry;
@@ -36,7 +36,7 @@ public final class TwitchSearchResponse extends TwitchBaseResponse<List<TwitchSe
                 item.getString("displayName"),
                 item.getObject("broadcastSettings").getString("title"),
                 stream.getInt("viewersCount"),
-                ThumbnailURLGenerator.getThumbnailURLForStream(item.getString("login")),
+                TwitchThumbnailURLGenerator.getThumbnailURLForStream(item.getString("login")),
                 stream.getObject("game").getString("name"),
                 item.getString("profileImageURL")
         );

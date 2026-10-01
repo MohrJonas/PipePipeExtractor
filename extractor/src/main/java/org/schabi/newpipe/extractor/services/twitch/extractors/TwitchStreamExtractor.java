@@ -14,7 +14,7 @@ import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlParser;
-import org.schabi.newpipe.extractor.services.twitch.api.ThumbnailURLGenerator;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.Resolution;
 import org.schabi.newpipe.extractor.services.twitch.data.TwitchVideoStream;
@@ -69,7 +69,7 @@ public class TwitchStreamExtractor extends StreamExtractor {
     @NotNull
     @Override
     public String getThumbnailUrl() throws ParsingException {
-        return ThumbnailURLGenerator.getThumbnailURLForStream(streamResponse.streamerName());
+        return TwitchThumbnailURLGenerator.getThumbnailURLForStream(streamResponse.streamerName());
     }
 
     @NotNull
@@ -115,7 +115,7 @@ public class TwitchStreamExtractor extends StreamExtractor {
                             StreamType.VIDEO_STREAM
                     );
                     item.setUploaderName(res.streamerName());
-                    item.setThumbnailUrl(ThumbnailURLGenerator.getThumbnailURLForStream(res.streamerLoginName()));
+                    item.setThumbnailUrl(TwitchThumbnailURLGenerator.getThumbnailURLForStream(res.streamerLoginName()));
                     return item;
                 }).toList();
             }

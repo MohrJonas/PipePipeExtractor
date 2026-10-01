@@ -2,7 +2,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses.nowLive;
 
 import com.grack.nanojson.JsonObject;
 
-import org.schabi.newpipe.extractor.services.twitch.api.ThumbnailURLGenerator;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
 
@@ -36,7 +36,7 @@ public class TwitchNowLiveResponse extends TwitchBaseResponse<TwitchNowLiveRespo
                             loginName,
                             title,
                             viewers,
-                            ThumbnailURLGenerator.getThumbnailURLForStream(loginName),
+                            TwitchThumbnailURLGenerator.getThumbnailURLForStream(loginName),
                             gameName,
                             outerNode.getString("cursor")
                     );
