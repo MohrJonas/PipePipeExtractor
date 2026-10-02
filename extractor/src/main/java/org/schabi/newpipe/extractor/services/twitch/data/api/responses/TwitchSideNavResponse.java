@@ -20,8 +20,8 @@ public class TwitchSideNavResponse extends TwitchBaseResponse<TwitchSideNavRespo
     protected TwitchSideNavResponseInner[] ParseData(@NotNull JsonObject data) {
         var edges = data.getObject("sideNav").getObject("sections").getArray("edges");
         return Stream.concat(
-                edges.getObject(0).getObject("node").getObject("content").getArray("edges").stream(),
-                edges.getObject(1).getObject("node").getObject("content").getArray("edges").stream()
+                edges.getObject(1).getObject("node").getObject("content").getArray("edges").stream(),
+                edges.getObject(0).getObject("node").getObject("content").getArray("edges").stream()
         ).map(ob -> {
             var obj = (JsonObject) ob;
             var node = obj.getObject("node");
