@@ -285,7 +285,7 @@ public class TwitchSearchExtractor extends SearchExtractor {
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
         try {
             final var query = TwitchUrlParser.parseQueryFromSearchUrl(getUrl());
-            response = apiClient.getSearchResponse(downloader, query);
+            response = apiClient.getUnauthorized().getSearchResponse(downloader, query);
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

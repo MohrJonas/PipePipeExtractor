@@ -75,7 +75,7 @@ public final class TwitchChannelVodExtractor extends ChannelTabExtractor {
         try {
             final var pair = TwitchUrlParser.parseChannelTabFromChannelUrl(getUrl());
             Assertions.assertThat(() -> pair.getSecond() == TwitchChannelTabLinkType.VIDEOS);
-            response = apiClient.getTwitchVods(downloader, pair.getFirst()).getData();
+            response = apiClient.getUnauthorized().getTwitchVods(downloader, pair.getFirst()).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

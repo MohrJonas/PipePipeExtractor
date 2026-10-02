@@ -45,7 +45,7 @@ public class TwitchLiveKiosk extends KioskExtractor<StreamInfoItem> {
     private void populateData(@Nonnull final Downloader downloader, @Nonnull final String url) throws IOException, ExtractionException {
         try {
             final var cursor = TwitchUrlParser.parseLiveKioskCursorFromKioskUrl(url);
-            response = apiClient.getNowLiveInformation(downloader, EntriesPerPage, cursor);
+            response = apiClient.getUnauthorized().getNowLiveInformation(downloader, EntriesPerPage, cursor);
         } catch (JsonParserException e) {
             throw new IOException(e);
         }
@@ -66,7 +66,7 @@ public class TwitchLiveKiosk extends KioskExtractor<StreamInfoItem> {
                         .map(liveEntry -> {
                             final var infoItem = new StreamInfoItem(
                                     getServiceId(),
-                                    TwitchUrlBuilder.buildStreamUrlFromChannelName(liveEntry.streamerName()),
+                                    TwitchUrlBuilder.buildStreamUrlFromChannelName(liveEntry.streamerLoginName()),
                                     liveEntry.streamTitle(),
                                     StreamType.LIVE_STREAM
                             );

@@ -15,7 +15,7 @@ public final class TwitchVideoPlayerMediaSessionManagerResponse extends TwitchBa
 
     @Override
     protected TwitchVideoPlayerMediaSessionManagerResponseInner ParseData(JsonObject data) {
-        if(data.has("video"))
+        if (data.has("video"))
             return parseVodData(data.getObject("video"));
         return parseClipData(data.getObject("clip"));
     }

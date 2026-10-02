@@ -52,7 +52,7 @@ public final class TwitchApiHelper {
     ) {
         return Map.of(
                 "X-Device-Id", List.of(Objects.requireNonNull(dataStore.deviceId)),
-                "Client-Id", List.of(TwitchApiConstants.CLIENT_ID),
+                "Client-Id", List.of(TwitchApiConstants.GQL_CLIENT_ID),
                 "Client-Session-Id", List.of(Objects.requireNonNull(dataStore.sessionId)),
                 "Client-Version", List.of(TwitchApiConstants.CLIENT_VERSION)
         );

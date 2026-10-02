@@ -10,8 +10,8 @@ import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
-import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.stream.TwitchStreamResponseInner;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamType;
@@ -48,7 +48,7 @@ public final class TwitchChannelStreamExtractor extends ChannelTabExtractor {
         );
         item.setUploaderName(response.streamerName());
         item.setViewCount(response.viewerCount());
-        item.setThumbnailUrl(TwitchThumbnailURLGenerator.getThumbnailURLForStream(response.streamerName()));
+        item.setThumbnailUrl(TwitchThumbnailURLGenerator.getThumbnailURLForStream(response.streamerLoginName()));
         return new InfoItemsPage<>(List.of(item), null, Collections.emptyList());
     }
 
@@ -60,7 +60,7 @@ public final class TwitchChannelStreamExtractor extends ChannelTabExtractor {
     @Override
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
         try {
-            response = apiClient.getStreamInformation(downloader, getId()).getData();
+            response = apiClient.getUnauthorized().getStreamInformation(downloader, getId()).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

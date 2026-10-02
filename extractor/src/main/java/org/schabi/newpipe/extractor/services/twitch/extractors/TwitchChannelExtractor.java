@@ -178,8 +178,8 @@ public class TwitchChannelExtractor extends ChannelExtractor {
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
         try {
             final var channelName = TwitchUrlParser.parseChannelNameFromChannelUrl(getUrl());
-            channelResponse = apiClient.getTwitchChannel(downloader, channelName).getData();
-            response = apiClient.getTwitchVods(downloader, channelName).getData();
+            channelResponse = apiClient.getUnauthorized().getTwitchChannel(downloader, channelName).getData();
+            response = apiClient.getUnauthorized().getTwitchVods(downloader, channelName).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

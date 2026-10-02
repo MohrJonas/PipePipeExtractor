@@ -18,6 +18,7 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.playlist.PlaylistExtractor;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiSettings;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchChannelClipExtractor;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchChannelExtractor;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchChannelStreamExtractor;
@@ -41,7 +42,20 @@ import java.util.List;
 public final class TwitchService extends StreamingService {
 
     public static final String BaseUrl = "https://twitch.tv";
-    private final TwitchApiClient twitchApiClient = new TwitchApiClient();
+
+    private boolean shouldUseHelixForKiosk;
+    private boolean shouldUseHelixForCategories;
+
+    private TwitchApiClient twitchApiClient;
+
+    private TwitchApiClient getOrInitializeTwitchClient() {
+        if(twitchApiClient == null)
+            twitchApiClient = new TwitchApiClient(
+                    new TwitchApiSettings(shouldUseHelixForKiosk, shouldUseHelixForCategories),
+                    getTokens()
+            );
+        return twitchApiClient;
+    }
 
     public TwitchService(final int id) {
         super(id, "Twitch", List.of(LIVE, VIDEO));
@@ -54,7 +68,7 @@ public final class TwitchService extends StreamingService {
 
     @Override
     public SearchExtractor getSearchExtractor(SearchQueryHandler queryHandler) {
-        return new TwitchSearchExtractor(this, queryHandler, twitchApiClient);
+        return new TwitchSearchExtractor(this, queryHandler, getOrInitializeTwitchClient());
     }
 
     @Override
@@ -103,7 +117,7 @@ public final class TwitchService extends StreamingService {
             final var list = new KioskList(this);
             final var streamHandler = new TwitchLiveKioskLinkHandlerFactory();
             list.addKioskEntry((streamingService, url, _) ->
-                            new TwitchLiveKiosk(streamingService, streamHandler.fromUrl(url), twitchApiClient),
+                            new TwitchLiveKiosk(streamingService, streamHandler.fromUrl(url), getOrInitializeTwitchClient()),
                     streamHandler,
                     TwitchLiveKiosk.KIOSK_ID
             );
@@ -116,16 +130,16 @@ public final class TwitchService extends StreamingService {
 
     @Override
     public ChannelExtractor getChannelExtractor(ListLinkHandler linkHandler) throws ExtractionException {
-        return new TwitchChannelExtractor(this, linkHandler, twitchApiClient);
+        return new TwitchChannelExtractor(this, linkHandler, getOrInitializeTwitchClient());
     }
 
     @Override
     public ChannelTabExtractor getChannelTabExtractor(ListLinkHandler linkHandler) throws ExtractionException {
         final var pair = TwitchUrlParser.parseChannelTabFromChannelUrl(linkHandler.getUrl());
         return switch (pair.getSecond()) {
-            case CLIPS -> new TwitchChannelClipExtractor(this, linkHandler, twitchApiClient);
-            case VIDEOS -> new TwitchChannelVodExtractor(this, linkHandler, twitchApiClient);
-            case LIVE -> new TwitchChannelStreamExtractor(this, linkHandler, twitchApiClient);
+            case CLIPS -> new TwitchChannelClipExtractor(this, linkHandler, getOrInitializeTwitchClient());
+            case VIDEOS -> new TwitchChannelVodExtractor(this, linkHandler, getOrInitializeTwitchClient());
+            case LIVE -> new TwitchChannelStreamExtractor(this, linkHandler, getOrInitializeTwitchClient());
         };
     }
 
@@ -139,17 +153,17 @@ public final class TwitchService extends StreamingService {
         final var url = linkHandler.getUrl();
         try {
             TwitchUrlParser.parseChannelNameFromStreamUrl(url);
-            return new TwitchStreamExtractor(this, linkHandler, twitchApiClient);
+            return new TwitchStreamExtractor(this, linkHandler, getOrInitializeTwitchClient());
         } catch (Exception ignored) {
         }
         try {
             TwitchUrlParser.parseClipIdFromClipUrl(url);
-            return new TwitchClipExtractor(this, linkHandler, twitchApiClient);
+            return new TwitchClipExtractor(this, linkHandler, getOrInitializeTwitchClient());
         } catch (Exception ignored) {
         }
         try {
             TwitchUrlParser.parseVodIdFromVodUrl(url);
-            return new TwitchVodExtractor(this, linkHandler, twitchApiClient);
+            return new TwitchVodExtractor(this, linkHandler, getOrInitializeTwitchClient());
         } catch (Exception ignored) {
         }
         throw new ExtractionException("Cannot get StreamExtractor for url " + url);
@@ -158,5 +172,13 @@ public final class TwitchService extends StreamingService {
     @Override
     public CommentsExtractor getCommentsExtractor(ListLinkHandler linkHandler) throws ExtractionException {
         return null;
+    }
+
+    public void setShouldUseHelixForKiosk(final boolean should) {
+        shouldUseHelixForKiosk = should;
+    }
+
+    public void setShouldUseHelixForCategories(final boolean should) {
+        shouldUseHelixForCategories = should;
     }
 }

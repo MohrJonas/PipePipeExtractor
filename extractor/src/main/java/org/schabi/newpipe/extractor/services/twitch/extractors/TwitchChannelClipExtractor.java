@@ -71,7 +71,7 @@ public final class TwitchChannelClipExtractor extends ChannelTabExtractor {
         try {
             final var pair = TwitchUrlParser.parseChannelTabFromChannelUrl(getUrl());
             Assertions.assertThat(() -> pair.getSecond() == TwitchChannelTabLinkType.CLIPS);
-            response = apiClient.getTwitchClips(downloader, pair.getFirst()).getData();
+            response = apiClient.getUnauthorized().getTwitchClips(downloader, pair.getFirst()).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }

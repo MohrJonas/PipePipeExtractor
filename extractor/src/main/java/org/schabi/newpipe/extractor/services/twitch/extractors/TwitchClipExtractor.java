@@ -11,8 +11,8 @@ import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
-import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
+import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchClipPlaybackResponseInner;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchVideoPlayerMediaSessionManagerResponseInner;
 import org.schabi.newpipe.extractor.stream.AudioStream;
@@ -53,8 +53,8 @@ public final class TwitchClipExtractor extends StreamExtractor {
     @Override
     public void onFetchPage(@Nonnull Downloader downloader) throws IOException, ExtractionException {
         try {
-            clipResponse = apiClient.getClipPlaybackToken(downloader, getId()).getData();
-            response = apiClient.getTwitchVideoPlayerMediaSessionClipManager(downloader, getId()).getData();
+            clipResponse = apiClient.getUnauthorized().getClipPlaybackToken(downloader, getId()).getData();
+            response = apiClient.getUnauthorized().getTwitchVideoPlayerMediaSessionClipManager(downloader, getId()).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }
@@ -63,7 +63,7 @@ public final class TwitchClipExtractor extends StreamExtractor {
     @Nonnull
     @Override
     public String getName() throws ParsingException {
-       return response.clipTitle();
+        return response.clipTitle();
     }
 
     @Nonnull
