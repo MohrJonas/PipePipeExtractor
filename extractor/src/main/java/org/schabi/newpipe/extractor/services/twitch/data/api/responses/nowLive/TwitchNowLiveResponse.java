@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses.nowLive;
 
 import com.grack.nanojson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
@@ -19,7 +20,7 @@ public class TwitchNowLiveResponse extends TwitchBaseResponse<TwitchNowLiveRespo
     }
 
     @Override
-    protected TwitchNowLiveResponseInner ParseData(JsonObject data) {
+    protected TwitchNowLiveResponseInner ParseData(@NotNull JsonObject data) {
         final var streams = data.getObject("streams");
         final var nodes = streams.getArray("edges");
         final var entries = nodes.stream().map(ob -> {

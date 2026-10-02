@@ -1,11 +1,15 @@
 package org.schabi.newpipe.extractor.services.twitch;
 
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 import org.schabi.newpipe.extractor.services.twitch.data.TwitchChannelTabLinkType;
 import org.schabi.newpipe.extractor.utils.Pair;
 import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -108,5 +112,27 @@ public final class TwitchUrlParser {
         Assertions.assertThat(() -> parts.length == 1 || parts.length == 2);
         Assertions.assertThat(() -> parts[0].equals("live"));
         return parts.length == 1 ? null : parts[1];
+    }
+
+    public static @Nonnull Triple<String, String, String> parseCategoryNameAndIdAndCursorFromCategoryUrl(@Nonnull final String urlString) {
+        ensureIsCorrectBaseUrl(urlString);
+        try {
+            final var url = new URL(urlString);
+            final var path = url.getPath().replaceFirst("/", "");
+            final var query = url.getQuery().replaceFirst("\\?", "");
+            Assertions.assertThat(() -> !path.isEmpty());
+            Assertions.assertThat(() -> !query.isEmpty());
+            final var pathParts = path.split("/");
+            Assertions.assertThat(() -> pathParts.length == 2 || pathParts.length == 3);
+            Assertions.assertThat(() -> pathParts[0].equals("directory"));
+            Assertions.assertThat(() -> pathParts[1].equals("category"));
+            final var queryParts = query.split("&");
+            if(queryParts.length == 1)
+                return new ImmutableTriple<>(pathParts[2], queryParts[0].split("=")[1], null);
+            return new ImmutableTriple<>(pathParts[2], queryParts[0].split("=")[1],
+                    URLDecoder.decode(queryParts[1].split("=")[1], StandardCharsets.UTF_8));
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

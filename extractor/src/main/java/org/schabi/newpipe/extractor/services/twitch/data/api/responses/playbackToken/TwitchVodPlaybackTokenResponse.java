@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses.playback
 
 import com.grack.nanojson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
 
@@ -15,7 +16,7 @@ public final class TwitchVodPlaybackTokenResponse extends TwitchBaseResponse<Twi
     }
 
     @Override
-    protected TwitchStreamPlaybackTokenResponseInner ParseData(JsonObject data) {
+    protected TwitchStreamPlaybackTokenResponseInner ParseData(@NotNull JsonObject data) {
         final var streamPlaybackAccessToken = data.getObject("videoPlaybackAccessToken");
         return new TwitchStreamPlaybackTokenResponseInner(
                 streamPlaybackAccessToken.getString("signature"),

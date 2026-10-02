@@ -28,7 +28,7 @@ public abstract class TwitchBaseResponse<T> {
                 : null;
     }
 
-    protected abstract T ParseData(JsonObject data);
+    protected abstract T ParseData(@Nonnull final JsonObject data);
 
     @Nullable
     public T getData() {

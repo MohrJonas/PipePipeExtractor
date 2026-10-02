@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses.channel;
 
 import com.grack.nanojson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
 
@@ -15,7 +16,7 @@ public final class TwitchChannelResponse extends TwitchBaseResponse<TwitchChanne
     }
 
     @Override
-    public TwitchChannelResponseInner ParseData(JsonObject data) {
+    public TwitchChannelResponseInner ParseData(@NotNull JsonObject data) {
         final var homeOfflineCarousel = data.getObject("synthetic-0");
         final var channelAvatar = data.getObject("synthetic-1");
         final var channelShell = data.getObject("synthetic-2");

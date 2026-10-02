@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses.stream;
 
 import com.grack.nanojson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
 
@@ -15,7 +16,7 @@ public final class TwitchStreamResponse extends TwitchBaseResponse<TwitchStreamR
     }
 
     @Override
-    protected TwitchStreamResponseInner ParseData(final JsonObject data) {
+    protected TwitchStreamResponseInner ParseData(@NotNull final JsonObject data) {
         final var user = data.getObject("user");
         final var streamerName = user.getString("displayName");
         final var loginName = user.getString("login");

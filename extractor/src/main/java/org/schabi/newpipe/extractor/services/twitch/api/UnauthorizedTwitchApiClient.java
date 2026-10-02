@@ -13,6 +13,7 @@ import org.schabi.newpipe.extractor.services.twitch.data.TwitchVideoStream;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchIntegrityToken;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchResponseParser;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
+import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchDirectoryResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchSideNavResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.channel.TwitchChannelResponse;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip.TwitchClipPlaybackResponse;
@@ -284,6 +285,14 @@ public final class UnauthorizedTwitchApiClient extends TwitchBaseApiClient {
                 _ -> TwitchApiConstants.TWITCH_GQL_URL,
                 _ -> TwitchGQLTemplates.getSideNavTemplate(channelName),
                 response -> TwitchResponseParser.parseFromJson(TwitchJsonHelper.parseJsonObjectFromString(response.responseBody()), TwitchSideNavResponse.class)
+        );
+    }
+
+    public @Nonnull TwitchDirectoryResponse getTwitchCategory(@Nonnull final Downloader downloader, @Nonnull final String categorySlug) throws JsonParserException, IOException, ReCaptchaException {
+        return performRequest(downloader, false, HttpRequestType.POST,
+                _ -> TwitchApiConstants.TWITCH_GQL_URL,
+                _ -> TwitchGQLTemplates.getDirectoryTemplate(categorySlug),
+                response -> TwitchResponseParser.parseFromJson(TwitchJsonHelper.parseJsonObjectFromString(response.responseBody()), TwitchDirectoryResponse.class)
         );
     }
 }

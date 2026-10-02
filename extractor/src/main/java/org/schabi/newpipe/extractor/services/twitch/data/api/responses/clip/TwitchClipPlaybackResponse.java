@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip;
 
 import com.grack.nanojson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
 
@@ -18,7 +19,7 @@ public final class TwitchClipPlaybackResponse extends TwitchBaseResponse<TwitchC
     }
 
     @Override
-    protected TwitchClipPlaybackResponseInner[] ParseData(JsonObject data) {
+    protected TwitchClipPlaybackResponseInner[] ParseData(@NotNull JsonObject data) {
         final var clip = data.getObject("clip");
         final var accessToken = clip.getObject("playbackAccessToken");
         final var signature = accessToken.getString("signature");

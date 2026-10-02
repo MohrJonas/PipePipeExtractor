@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses;
 
 import com.grack.nanojson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 
 import java.util.stream.Stream;
@@ -16,7 +17,7 @@ public class TwitchSideNavResponse extends TwitchBaseResponse<TwitchSideNavRespo
     }
 
     @Override
-    protected TwitchSideNavResponseInner[] ParseData(JsonObject data) {
+    protected TwitchSideNavResponseInner[] ParseData(@NotNull JsonObject data) {
         var edges = data.getObject("sideNav").getObject("sections").getArray("edges");
         return Stream.concat(
                 edges.getObject(0).getObject("node").getObject("content").getArray("edges").stream(),

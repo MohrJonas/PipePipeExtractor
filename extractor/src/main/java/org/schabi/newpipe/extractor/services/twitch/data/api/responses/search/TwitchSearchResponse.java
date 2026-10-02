@@ -3,6 +3,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses.search;
 import com.grack.nanojson.JsonArray;
 import com.grack.nanojson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchThumbnailURLGenerator;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
@@ -57,11 +58,15 @@ public final class TwitchSearchResponse extends TwitchBaseResponse<List<TwitchSe
 
     private static @Nonnull TwitchSearchGameResponseEntry parseAsGameEntry(JsonObject node) {
         final var item = node.getObject("item");
-        return new TwitchSearchGameResponseEntry(item.getString("displayName"), item.getString("boxArtURL"));
+        return new TwitchSearchGameResponseEntry(
+                item.getString("displayName"),
+                item.getString("slug"),
+                item.getString("id"),
+                item.getString("boxArtURL"));
     }
 
     @Override
-    protected List<TwitchSearchBaseResponseEntry> ParseData(JsonObject o) {
+    protected List<TwitchSearchBaseResponseEntry> ParseData(@NotNull JsonObject o) {
         final var searchFor = o.getObject("searchFor");
         final Optional<JsonArray> channels = searchFor.has("channels") ? Optional.of(searchFor.getObject("channels").getArray("edges")) : Optional.empty();
         final Optional<JsonArray> games = searchFor.has("games") ? Optional.of(searchFor.getObject("games").getArray("edges")) : Optional.empty();

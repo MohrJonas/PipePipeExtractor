@@ -2,6 +2,7 @@ package org.schabi.newpipe.extractor.services.twitch.data.api.responses.clip;
 
 import com.grack.nanojson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
 import org.schabi.newpipe.extractor.services.twitch.data.api.TwitchExtensionsData;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.TwitchBaseResponse;
 
@@ -14,7 +15,7 @@ public final class TwitchVideoPlayerMediaSessionManagerResponse extends TwitchBa
     }
 
     @Override
-    protected TwitchVideoPlayerMediaSessionManagerResponseInner ParseData(JsonObject data) {
+    protected TwitchVideoPlayerMediaSessionManagerResponseInner ParseData(@NotNull JsonObject data) {
         if (data.has("video"))
             return parseVodData(data.getObject("video"));
         return parseClipData(data.getObject("clip"));

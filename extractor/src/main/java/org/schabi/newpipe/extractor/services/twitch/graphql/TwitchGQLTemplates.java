@@ -262,6 +262,34 @@ public final class TwitchGQLTemplates {
                 }
             }""";
 
+    private static final String DIRECTORY_TEMPLATE = """
+            {
+                "operationName": "DirectoryPage_Game",
+                "variables": {
+                    "imageWidth": 50,
+                    "slug": "%s",
+                    "options": {
+                        "sort": "RELEVANCE",
+                        "recommendationsContext": {
+                            "platform": "web"
+                        },
+                        "freeformTags": null,
+                        "tags": [],
+                        "broadcasterLanguages": [],
+                        "systemFilters": []
+                    },
+                    "sortTypeIsRecency": false,
+                    "limit": 30,
+                    "includeCostreaming": true
+                },
+                "extensions": {
+                    "persistedQuery": {
+                        "version": 1,
+                        "sha256Hash": "86bcceb4e8b1a51256ff8eed8bd8aae4acacf80d737efe904f84f3aeadf8cafd"
+                    }
+                }
+            }""";
+
     public static String getSideNavTemplate(final String channelName) {
         return String.format(SIDE_NAV_TEMPLATE, channelName, channelName, channelName);
     }
@@ -308,5 +336,9 @@ public final class TwitchGQLTemplates {
 
     public static String getVodPlaybackTokenTemplate(final String vodId) {
         return String.format(VOD_PLAYBACK_ACCESS_TOKEN, vodId);
+    }
+
+    public static String getDirectoryTemplate(final String directorySlug) {
+        return String.format(DIRECTORY_TEMPLATE, directorySlug);
     }
 }

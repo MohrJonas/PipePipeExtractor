@@ -78,7 +78,7 @@ public class TwitchSearchExtractor extends SearchExtractor {
     private static PlaylistInfoItem buildCategoryInfoItem(final int serviceId, final TwitchSearchGameResponseEntry entry) {
         final var item = new PlaylistInfoItem(
                 serviceId,
-                TwitchUrlBuilder.buildCategoryUrlFromCategoryName(entry.getGameName()),
+                TwitchUrlBuilder.buildCategoryUrlFromCategoryName(entry.getSlug(), entry.getId(), null),
                 entry.getGameName()
         );
         item.setThumbnailUrl(entry.getGameBoxArtUrl());

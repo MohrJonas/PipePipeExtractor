@@ -1,9 +1,12 @@
 package org.schabi.newpipe.extractor.services.twitch;
 
 import org.schabi.newpipe.extractor.services.twitch.data.TwitchChannelTabLinkType;
+import org.schabi.newpipe.extractor.utils.Utils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,9 +36,14 @@ public final class TwitchUrlBuilder {
         }
     }
 
-    public static @Nonnull String buildCategoryUrlFromCategoryName(@Nonnull final String name) {
+    public static @Nonnull String buildCategoryUrlFromCategoryName(@Nonnull final String name, @Nonnull final String id, @Nullable final String cursor) {
         try {
-            return new URL(TwitchService.BaseUrl + "/directory/category/" + name).toString();
+            var urlString = TwitchService.BaseUrl + "/directory/category/" + name;
+            urlString += "?_id=" + id;
+            if(cursor != null)
+                urlString += "&_cursor=" + URLEncoder.encode(cursor, StandardCharsets.UTF_8);
+            final var url = new URL(urlString);
+            return url.toString();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }

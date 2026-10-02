@@ -24,6 +24,7 @@ import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchChannelExtr
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchChannelStreamExtractor;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchChannelVodExtractor;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchClipExtractor;
+import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchPlaylistExtractor;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchSearchExtractor;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchStreamExtractor;
 import org.schabi.newpipe.extractor.services.twitch.extractors.TwitchVodExtractor;
@@ -31,6 +32,7 @@ import org.schabi.newpipe.extractor.services.twitch.kiosks.TwitchLiveKiosk;
 import org.schabi.newpipe.extractor.services.twitch.linkHandlers.TwitchChannelLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.twitch.linkHandlers.TwitchChannelTabLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.twitch.linkHandlers.TwitchLiveKioskLinkHandlerFactory;
+import org.schabi.newpipe.extractor.services.twitch.linkHandlers.TwitchPlaylistLinkHandlerFactory;
 import org.schabi.newpipe.extractor.services.twitch.linkHandlers.TwitchSearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.services.twitch.linkHandlers.TwitchStreamLinkHandlerFactory;
 import org.schabi.newpipe.extractor.stream.StreamExtractor;
@@ -93,7 +95,7 @@ public final class TwitchService extends StreamingService {
 
     @Override
     public ListLinkHandlerFactory getPlaylistLHFactory() {
-        return null;
+        return new TwitchPlaylistLinkHandlerFactory();
     }
 
     @Override
@@ -145,7 +147,7 @@ public final class TwitchService extends StreamingService {
 
     @Override
     public PlaylistExtractor getPlaylistExtractor(ListLinkHandler linkHandler) throws ExtractionException {
-        return null;
+        return new TwitchPlaylistExtractor(this, linkHandler, twitchApiClient);
     }
 
     @Override
