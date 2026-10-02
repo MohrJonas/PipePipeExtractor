@@ -126,10 +126,10 @@ public final class UnauthorizedTwitchApiClient extends TwitchBaseApiClient {
         );
     }
 
-    public @Nonnull TwitchNowLiveResponse getNowLiveInformation(final @Nonnull Downloader downloader, final int count, @Nullable final String cursor) throws IOException, ReCaptchaException, JsonParserException {
+    public @Nonnull TwitchNowLiveResponse getNowLiveInformation(final @Nonnull Downloader downloader) throws IOException, ReCaptchaException, JsonParserException {
         return performRequest(downloader, false, HttpRequestType.POST,
                 _ -> TwitchApiConstants.TWITCH_GQL_URL,
-                _ -> TwitchGQLTemplates.getNowLive(count, cursor),
+                _ -> TwitchGQLTemplates.getNowLive(),
                 response -> TwitchResponseParser.parseFromJson(TwitchJsonHelper.parseJsonObjectFromString(response.responseBody()), TwitchNowLiveResponse.class)
         );
     }

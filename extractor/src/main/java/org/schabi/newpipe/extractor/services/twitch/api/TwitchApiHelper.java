@@ -88,4 +88,12 @@ public final class TwitchApiHelper {
                         ))
         );
     }
+
+    public static @Nonnull Map<String, List<String>> buildHelixRequestHeaders(@Nonnull final String helixToken,
+                                                                              @Nonnull final String clientId) {
+        return Map.of(
+                "Authorization", List.of("Bearer " + helixToken),
+                "Client-Id", List.of(clientId)
+        );
+    }
 }

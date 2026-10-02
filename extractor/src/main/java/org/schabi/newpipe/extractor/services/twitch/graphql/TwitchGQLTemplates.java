@@ -50,9 +50,8 @@ public final class TwitchGQLTemplates {
             ]""";
 
     private static final String NOW_LIVE_TEMPLATE = "{\"query\":\"{\\n" +
-            "    streams(first: %d%s) {\\n" +
+            "    streams(first: 25) {\\n" +
             "        edges {\\n" +
-            "        cursor\\n" +
             "        node {\\n" +
             "            id\\n" +
             "            title\\n" +
@@ -65,9 +64,6 @@ public final class TwitchGQLTemplates {
             "                name\\n" +
             "            }\\n" +
             "        }\\n" +
-            "        }\\n" +
-            "        pageInfo {\\n" +
-            "            hasNextPage\\n" +
             "        }\\n" +
             "    }\\n" +
             "}\"}";
@@ -290,12 +286,8 @@ public final class TwitchGQLTemplates {
         return String.format(SEARCH_TEMPLATE, requestId, query);
     }
 
-    public static String getNowLive(final int count, @Nullable final String cursor) {
-        return String.format(NOW_LIVE_TEMPLATE, count,
-                cursor != null
-                        ? ", after: " + "\\\"" + cursor + "\\\""
-                        : ""
-        );
+    public static String getNowLive() {
+        return String.format(NOW_LIVE_TEMPLATE);
     }
 
     public static String getChannel(final String channelName) {

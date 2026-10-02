@@ -37,15 +37,14 @@ public class TwitchNowLiveResponse extends TwitchBaseResponse<TwitchNowLiveRespo
                             title,
                             viewers,
                             TwitchThumbnailURLGenerator.getThumbnailURLForStream(loginName),
-                            gameName,
-                            outerNode.getString("cursor")
+                            gameName
                     );
                 })
                 .sorted(Comparator.comparing(TwitchNowLiveResponseEntry::streamViewers).reversed())
                 .collect(Collectors.toList());
         return new TwitchNowLiveResponseInner(
                 streams.getObject("pageInfo").getBoolean("hasNextPage"),
-                entries.getLast().cursor(),
+                null,
                 entries
         );
     }

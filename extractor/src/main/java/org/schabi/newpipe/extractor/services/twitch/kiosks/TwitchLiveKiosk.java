@@ -13,6 +13,7 @@ import org.schabi.newpipe.extractor.services.twitch.TwitchUrlBuilder;
 import org.schabi.newpipe.extractor.services.twitch.TwitchUrlParser;
 import org.schabi.newpipe.extractor.services.twitch.api.TwitchApiClient;
 import org.schabi.newpipe.extractor.services.twitch.data.api.responses.nowLive.TwitchNowLiveResponse;
+import org.schabi.newpipe.extractor.services.twitch.data.api.responses.nowLive.TwitchNowLiveResponseInner;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.schabi.newpipe.extractor.stream.StreamType;
 
@@ -25,10 +26,9 @@ import javax.annotation.Nonnull;
 public class TwitchLiveKiosk extends KioskExtractor<StreamInfoItem> {
 
     public static final String KIOSK_ID = "live";
-    private static final int EntriesPerPage = 25;
     @Nonnull
     private final TwitchApiClient apiClient;
-    private TwitchNowLiveResponse response;
+    private TwitchNowLiveResponseInner response;
 
     public TwitchLiveKiosk(final @Nonnull StreamingService streamingService,
                            final @Nonnull ListLinkHandler linkHandler,
@@ -44,8 +44,13 @@ public class TwitchLiveKiosk extends KioskExtractor<StreamInfoItem> {
 
     private void populateData(@Nonnull final Downloader downloader, @Nonnull final String url) throws IOException, ExtractionException {
         try {
-            final var cursor = TwitchUrlParser.parseLiveKioskCursorFromKioskUrl(url);
-            response = apiClient.getUnauthorized().getNowLiveInformation(downloader, EntriesPerPage, cursor);
+            if(apiClient.getApiSettings().shouldUseHelixForKiosk()) {
+                final var cursor = TwitchUrlParser.parseLiveKioskCursorFromKioskUrl(url);
+                response = apiClient.getAuthorized().getNowLiveInformation(downloader, cursor);
+            }
+
+            else
+                response = apiClient.getUnauthorized().getNowLiveInformation(downloader).getData();
         } catch (JsonParserException e) {
             throw new IOException(e);
         }
@@ -61,7 +66,7 @@ public class TwitchLiveKiosk extends KioskExtractor<StreamInfoItem> {
     @Override
     public InfoItemsPage<StreamInfoItem> getInitialPage() throws IOException, ExtractionException {
         return new InfoItemsPage<>(
-                response.getData().liveEntries()
+                response.liveEntries()
                         .stream()
                         .map(liveEntry -> {
                             final var infoItem = new StreamInfoItem(
@@ -79,12 +84,9 @@ public class TwitchLiveKiosk extends KioskExtractor<StreamInfoItem> {
                             return infoItem;
                         })
                         .collect(Collectors.toList()),
-                null,
-//                This kiosk is theoretically set up for pagination but since I see no easy way to get around
-//                Twitch's /integrity endpoint we have to see if this will work any day
-//                response.getData().hasMoreEntries()
-//                ? new Page(TwitchUrlBuilder.buildLiveKioskUrlFromCursor(response.getData().cursor()))
-//                : null,
+                        apiClient.getApiSettings().shouldUseHelixForKiosk() && response.hasMoreEntries()
+                    ? new Page(TwitchUrlBuilder.buildLiveKioskUrlFromCursor(response.cursor()))
+                    : null,
                 Collections.emptyList());
     }
 
